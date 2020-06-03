@@ -25,8 +25,7 @@ class RankingListModel {
   String name;
   String author;
 
-  RankingListModel(
-    Map item, {
+  RankingListModel({
     this.picUrl,
     this.title,
     this.name,
