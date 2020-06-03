@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:music_app/models/find_model.dart';
+import 'package:music_app/notifiers/find_notifier.dart';
 
 import 'module_title_bar.dart';
 
 class NewestMusic extends StatelessWidget {
-  final FindModel model;
+  final FindNotifier notifier;
   final PageController controller = new PageController(viewportFraction: 0.9);
 
-  NewestMusic({Key key, this.model}) : super(key: key);
+  NewestMusic({Key key, this.notifier}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class NewestMusic extends StatelessWidget {
         Container(
           height: 200.0,
           child: FutureBuilder(
-            future: model.getNewSong(),
+            future: notifier.getNewSong(),
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CupertinoActivityIndicator(radius: 16.0);

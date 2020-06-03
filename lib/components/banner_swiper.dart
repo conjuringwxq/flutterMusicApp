@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
+import 'package:music_app/notifiers/find_notifier.dart';
 import 'package:music_app/models/find_model.dart';
 
 class BannerSwiper extends StatelessWidget {
-  final FindModel model;
+  final FindNotifier notifier;
 
-  const BannerSwiper({Key key, this.model}) : super(key: key);
+  const BannerSwiper({Key key, this.notifier}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class BannerSwiper extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 10.0),
       height: 150.0,
       child: FutureBuilder(
-        future: model.getBanner(),
+        future: notifier.getBanner(),
         builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CupertinoActivityIndicator(
@@ -37,7 +38,7 @@ class BannerSwiper extends StatelessWidget {
                   child: Stack(
                     children: <Widget>[
                       Image.network(
-                        "${snapshot.data[index]['pic']}",
+                        "${BannerModel.fromJson(snapshot.data[index]).pic}",
                         fit: BoxFit.fill,
                       ),
                       Positioned(
@@ -46,7 +47,9 @@ class BannerSwiper extends StatelessWidget {
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 8.0),
                           decoration: BoxDecoration(
-                            color: snapshot.data[index]['titleColor'] == "red"
+                            color: BannerModel.fromJson(snapshot.data[index])
+                                        .titleColor ==
+                                    "red"
                                 ? Colors.red
                                 : Colors.blue,
                             borderRadius: BorderRadius.only(
@@ -54,7 +57,7 @@ class BannerSwiper extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            "${snapshot.data[index]['typeTitle']}",
+                            "${BannerModel.fromJson(snapshot.data[index]).typeTitle}",
                             style: TextStyle(
                               color: Colors.white,
                             ),

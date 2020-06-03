@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:music_app/models/find_model.dart';
+import 'package:music_app/notifiers/find_notifier.dart';
 
 import 'module_title_bar.dart';
 
 class RecommendSongList extends StatelessWidget {
-  final FindModel model;
+  final FindNotifier notifier;
 
-  const RecommendSongList({Key key, this.model}) : super(key: key);
+  const RecommendSongList({Key key, this.notifier}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class RecommendSongList extends StatelessWidget {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: FutureBuilder(
-            future: model.getPersonalized(),
+            future: notifier.getPersonalized(),
             builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CupertinoActivityIndicator(radius: 16.0);

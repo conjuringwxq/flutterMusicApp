@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'models/global_model.dart';
-import 'models/find_model.dart';
+import 'notifiers/global_notifier.dart';
+import 'notifiers/find_notifier.dart';
 
 import 'pages/tabBar/find.dart';
 import 'pages/tabBar/video.dart';
@@ -14,8 +14,8 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => GlobalModel()),
-        ChangeNotifierProvider(create: (_) => FindModel()),
+        ChangeNotifierProvider(create: (_) => GlobalNotifier()),
+        ChangeNotifierProvider(create: (_) => FindNotifier()),
       ],
       child: MusicApp(),
     ),
@@ -69,13 +69,13 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    GlobalModel globalModel = context.watch<GlobalModel>();
+    GlobalNotifier globalNotifier = context.watch<GlobalNotifier>();
 
     return Scaffold(
       body: PageView.builder(
         controller: _controller,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: globalModel.bottomBarSettingsList.length,
+        itemCount: globalNotifier.bottomBarSettingsList.length,
         itemBuilder: (BuildContext context, int index) {
           return _tabBarRouteView(index);
         },
@@ -83,7 +83,7 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         selectedItemColor: Colors.red,
-        items: globalModel.bottomBarSettingsList.map(
+        items: globalNotifier.bottomBarSettingsList.map(
           (BottomBarSettings item) {
             return BottomNavigationBarItem(
               title: Text(item.title),

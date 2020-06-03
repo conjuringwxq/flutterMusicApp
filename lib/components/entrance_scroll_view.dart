@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:music_app/models/find_model.dart';
+import 'package:music_app/notifiers/find_notifier.dart';
 
 class EntranceScrollView extends StatelessWidget {
-  final FindModel model;
+  final FindNotifier notifier;
 
-  const EntranceScrollView({Key key, this.model}) : super(key: key);
+  const EntranceScrollView({Key key, this.notifier}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: model.entranceSettingsList.map((EntranceSettings item) {
+        children: notifier.entranceSettingsList.map((EntranceSettings item) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[

@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:music_app/models/find_model.dart';
+import 'package:music_app/notifiers/find_notifier.dart';
 
 import 'module_title_bar.dart';
 
 class RankingList extends StatefulWidget {
-  final FindModel model;
+  final FindNotifier notifier;
 
-  RankingList({Key key, this.model}) : super(key: key);
+  RankingList({Key key, this.notifier}) : super(key: key);
 
   @override
   _RankingListState createState() => _RankingListState();
@@ -28,7 +28,7 @@ class _RankingListState extends State<RankingList> {
         Container(
           height: 250.0,
           child: FutureBuilder(
-            future: widget.model.getRankingList([23, 2, 3, 4, 5]),
+            future: widget.notifier.getRankingList([23, 2, 3, 4, 5]),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CupertinoActivityIndicator(radius: 16.0);
@@ -38,62 +38,49 @@ class _RankingListState extends State<RankingList> {
                 controller: controller,
                 itemCount: 5,
                 itemBuilder: (BuildContext context, int index) {
-                  List<Widget> children = [];
-                  List<Widget> rankingTitle = [];
-                  List<DecorationImage> backgroundImage = [];
-
-                  for (var item in snapshot.data) {
-                    /// 背景图
-                    backgroundImage.add(
-                      DecorationImage(
+                  Map item = snapshot.data.toList()[index];
+                  return Container(
+                    margin: EdgeInsets.only(right: 15.0),
+                    height: 200.0,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
                         image: NetworkImage(
                           "${item['playlist']['tracks'][0]['al']['picUrl']}",
                         ),
                         fit: BoxFit.cover,
                       ),
-                    );
-
-                    /// 排行榜标题
-                    rankingTitle.add(
-                      RankingTitle(
-                        title: item['playlist']['name'],
-                        leading: Icons.adb,
-                      ),
-                    );
-
-                    /// 内容
-                    children.add(
-                      Container(
-                        child: Column(
-                          children: [0, 1, 2].map((int order) {
-                            return RankingItem(
-                              image: Image.network(
-                                "${item['playlist']['tracks'][order]['al']['picUrl']}",
-                                fit: BoxFit.scaleDown,
-                              ),
-                              order: order + 1,
-                              name: item['playlist']['tracks'][order]['name'],
-                              author: item['playlist']['tracks'][order]['ar'][0]
-                                  ['name'],
-                              flag: "新",
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    );
-                  }
-
-                  return Container(
-                    margin: EdgeInsets.only(right: 15.0),
-                    height: 200.0,
-                    decoration: BoxDecoration(
-                      image: backgroundImage[index],
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Column(
                       children: <Widget>[
-                        Opacity(opacity: 1.0, child: rankingTitle[index]),
-                        Opacity(opacity: 1.0, child: children[index]),
+                        Opacity(
+                          opacity: 1.0,
+                          child: RankingTitle(
+                            title: item['playlist']['name'],
+                            leading: Icons.adb,
+                          ),
+                        ),
+                        Opacity(
+                          opacity: 1.0,
+                          child: Container(
+                            child: Column(
+                              children: [0, 1, 2].map((int order) {
+                                return RankingItem(
+                                  image: Image.network(
+                                    "${item['playlist']['tracks'][order]['al']['picUrl']}",
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                  order: order + 1,
+                                  name: item['playlist']['tracks'][order]
+                                      ['name'],
+                                  author: item['playlist']['tracks'][order]
+                                      ['ar'][0]['name'],
+                                  flag: "新",
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   );
@@ -149,14 +136,14 @@ class RankingItem extends StatelessWidget {
   final String author;
   final String flag;
 
-  RankingItem(
-      {Key key,
-      @required this.image,
-      @required this.order,
-      @required this.name,
-      @required this.author,
-      @required this.flag})
-      : super(key: key);
+  RankingItem({
+    Key key,
+    @required this.image,
+    @required this.order,
+    @required this.name,
+    @required this.author,
+    @required this.flag,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

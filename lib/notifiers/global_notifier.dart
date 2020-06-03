@@ -7,7 +7,8 @@ class BottomBarSettings {
   BottomBarSettings({this.icon, this.title});
 }
 
-class GlobalModel with ChangeNotifier {
+class GlobalNotifier with ChangeNotifier {
+
   final List<BottomBarSettings> _bottomBarSettingsList = [
     BottomBarSettings(
       icon: IconData(0xe601, fontFamily: 'iconfont'),

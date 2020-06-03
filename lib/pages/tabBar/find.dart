@@ -1,7 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-import 'package:music_app/models/find_model.dart';
+import 'package:music_app/notifiers/find_notifier.dart';
 
 import 'package:music_app/components/custom_app_bar.dart';
 import 'package:music_app/components/banner_swiper.dart';
@@ -24,7 +24,7 @@ class _FindScreenState extends State<FindScreen>
 
   @override
   Widget build(BuildContext context) {
-    FindModel findModel = context.watch<FindModel>();
+    FindNotifier findNotifier = context.watch<FindNotifier>();
 
     super.build(context);
 
@@ -32,11 +32,11 @@ class _FindScreenState extends State<FindScreen>
       appBar: CustomAppBar(),
       body: ListView(
         children: <Widget>[
-          BannerSwiper(model: findModel),
-          EntranceScrollView(model: findModel),
-          RecommendSongList(model: findModel),
-          NewestMusic(model: findModel),
-          RankingList(model: findModel),
+          BannerSwiper(notifier: findNotifier),
+          EntranceScrollView(notifier: findNotifier),
+          RecommendSongList(notifier: findNotifier),
+          NewestMusic(notifier: findNotifier),
+          RankingList(notifier: findNotifier),
         ],
       ),
     );
