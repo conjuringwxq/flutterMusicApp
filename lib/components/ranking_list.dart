@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:music_app/notifiers/find_notifier.dart';
+import 'package:music_app/models/find_model.dart';
 
 import 'module_title_bar.dart';
 
@@ -38,14 +40,14 @@ class _RankingListState extends State<RankingList> {
                 controller: controller,
                 itemCount: 5,
                 itemBuilder: (BuildContext context, int index) {
-                  Map item = snapshot.data.toList()[index];
+                  Map rangkingJson = snapshot.data.toList()[index];
                   return Container(
                     margin: EdgeInsets.only(right: 15.0),
                     height: 200.0,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: NetworkImage(
-                          "${item['playlist']['tracks'][0]['al']['picUrl']}",
+                          RankingListModel.fromJson(rangkingJson, 0).picUrl,
                         ),
                         fit: BoxFit.cover,
                       ),
@@ -56,7 +58,8 @@ class _RankingListState extends State<RankingList> {
                         Opacity(
                           opacity: 1.0,
                           child: RankingTitle(
-                            title: item['playlist']['name'],
+                            title:
+                                RankingListModel.fromJson(rangkingJson).title,
                             leading: Icons.adb,
                           ),
                         ),
@@ -65,16 +68,17 @@ class _RankingListState extends State<RankingList> {
                           child: Container(
                             child: Column(
                               children: [0, 1, 2].map((int order) {
+                                RankingListModel rankingListModel =
+                                    RankingListModel.fromJson(
+                                        rangkingJson, order);
                                 return RankingItem(
                                   image: Image.network(
-                                    "${item['playlist']['tracks'][order]['al']['picUrl']}",
+                                    rankingListModel.picUrl,
                                     fit: BoxFit.scaleDown,
                                   ),
                                   order: order + 1,
-                                  name: item['playlist']['tracks'][order]
-                                      ['name'],
-                                  author: item['playlist']['tracks'][order]
-                                      ['ar'][0]['name'],
+                                  name: rankingListModel.name,
+                                  author: rankingListModel.author,
                                   flag: "新",
                                 );
                               }).toList(),

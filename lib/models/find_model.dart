@@ -20,17 +20,35 @@ class BannerModel {
 }
 
 class RankingListModel {
-  final String picUrl;
-  final String title;
-  final String name;
-  final List<String> author;
+  String picUrl;
+  String title;
+  String name;
+  String author;
 
-  RankingListModel({
+  RankingListModel(
+    Map item, {
     this.picUrl,
     this.title,
     this.name,
     this.author,
   });
 
-  // RankingListModel.fromJson(Map json);
+  RankingListModel.fromJson(Map json, [int order]) {
+    if (order == null) {
+      this.title = json['playlist']['name'];
+      return;
+    }
+    this.picUrl = json['playlist']['tracks'][order]['al']['picUrl'];
+    this.name = json['playlist']['tracks'][order]['name'];
+    this.author = json['playlist']['tracks'][order]['ar'][0]['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['picUrl'] = this.picUrl;
+    data['title'] = this.title;
+    data['name'] = this.name;
+    data['author'] = this.author;
+    return data;
+  }
 }
